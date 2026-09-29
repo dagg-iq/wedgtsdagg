@@ -43,24 +43,27 @@ class GlassSystemWidgetProvider : AppWidgetProvider() {
                     status == BatteryManager.BATTERY_STATUS_FULL
 
             val batteryPct = if (level >= 0 && scale > 0) (level * 100 / scale) else 85
-            views.setTextViewText(R.id.system_battery_level, "$batteryPct%")
-
-            if (isCharging) {
-                views.setTextViewText(R.id.system_battery_state, "⚡ Charging")
-                views.setTextViewText(R.id.system_charging_badge, "CHARGING")
-            } else {
-                views.setTextViewText(R.id.system_battery_state, "🔋 On Battery")
-                views.setTextViewText(R.id.system_charging_badge, "HEALTHY")
-            }
 
             // Read Real RAM Available
             val actManager = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
             val memInfo = ActivityManager.MemoryInfo()
+            var availGb = 4.2
             if (actManager != null) {
                 actManager.getMemoryInfo(memInfo)
-                val availGb = memInfo.availMem.toDouble() / (1024 * 1024 * 1024)
-                views.setTextViewText(R.id.system_ram_level, String.format(Locale.US, "%.1f GB", availGb))
+                availGb = memInfo.availMem.toDouble() / (1024 * 1024 * 1024)
             }
+            val ramStr = String.format(Locale.US, "%.1f GB", availGb)
+
+            // Render high-res cyber emerald dual tachometer bitmap
+            val bitmap = GlassWidgetRenderer.renderSystemWidget(
+                context = context,
+                batteryPct = batteryPct,
+                isCharging = isCharging,
+                ramAvailableGb = ramStr,
+                width = 720,
+                height = 360
+            )
+            views.setImageViewBitmap(R.id.widget_system_canvas, bitmap)
 
             // Launch MainActivity when tapped
             val intent = Intent(context, MainActivity::class.java)

@@ -1,18 +1,15 @@
 package com.example.widget
 
+import android.app.AlarmManager
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.os.BatteryManager
 import android.widget.RemoteViews
 import com.example.MainActivity
 import com.example.R
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class GlassAppWidgetProvider : AppWidgetProvider() {
 
@@ -21,12 +18,44 @@ class GlassAppWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
+        scheduleMinuteUpdates(context)
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
     }
 
+    override fun onEnabled(context: Context) {
+        super.onEnabled(context)
+        scheduleMinuteUpdates(context)
+    }
+
+    override fun onDisabled(context: Context) {
+        super.onDisabled(context)
+        cancelMinuteUpdates(context)
+    }
+
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        if (intent.action == ACTION_CLOCK_TICK ||
+            intent.action == Intent.ACTION_TIME_CHANGED ||
+            intent.action == Intent.ACTION_TIMEZONE_CHANGED
+        ) {
+            updateAllWidgets(context)
+        }
+    }
+
     companion object {
+        const val ACTION_CLOCK_TICK = "com.example.widget.ACTION_CLOCK_TICK"
+
+        fun updateAllWidgets(context: Context) {
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val thisWidget = ComponentName(context, GlassAppWidgetProvider::class.java)
+            val allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget)
+            for (id in allWidgetIds) {
+                updateAppWidget(context, appWidgetManager, id)
+            }
+        }
+
         fun updateAppWidget(
             context: Context,
             appWidgetManager: AppWidgetManager,
@@ -34,23 +63,9 @@ class GlassAppWidgetProvider : AppWidgetProvider() {
         ) {
             val views = RemoteViews(context.packageName, R.layout.glass_appwidget_layout)
 
-            val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-            val amPmFormat = SimpleDateFormat("a", Locale.getDefault())
-            val dateFormat = SimpleDateFormat("EEE, d MMM", Locale.getDefault())
-            val now = Date()
-
-            views.setTextViewText(R.id.widget_time, timeFormat.format(now))
-            views.setTextViewText(R.id.widget_am_pm, amPmFormat.format(now).uppercase())
-            views.setTextViewText(R.id.widget_date, dateFormat.format(now).uppercase())
-
-            // Get Real Battery percentage
-            val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { filter ->
-                context.registerReceiver(null, filter)
-            }
-            val level: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
-            val scale: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
-            val batteryPct = if (level >= 0 && scale > 0) (level * 100 / scale) else 85
-            views.setTextViewText(R.id.widget_battery, "⚡ $batteryPct%")
+            // Render Luxury Horology Analog Clock Canvas Bitmap
+            val bitmap = GlassWidgetRenderer.renderLuxuryClock(context, 600, 600)
+            views.setImageViewBitmap(R.id.widget_clock_canvas, bitmap)
 
             // Launch MainActivity when tapped
             val intent = Intent(context, MainActivity::class.java)
@@ -63,6 +78,35 @@ class GlassAppWidgetProvider : AppWidgetProvider() {
             views.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
+
+        private fun scheduleMinuteUpdates(context: Context) {
+            val intent = Intent(context, GlassAppWidgetProvider::class.java).apply {
+                action = ACTION_CLOCK_TICK
+            }
+            val pendingIntent = PendingIntent.getBroadcast(
+                context, 888, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+            alarmManager?.setRepeating(
+                AlarmManager.RTC,
+                System.currentTimeMillis() + 60000L,
+                60000L,
+                pendingIntent
+            )
+        }
+
+        private fun cancelMinuteUpdates(context: Context) {
+            val intent = Intent(context, GlassAppWidgetProvider::class.java).apply {
+                action = ACTION_CLOCK_TICK
+            }
+            val pendingIntent = PendingIntent.getBroadcast(
+                context, 888, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+            alarmManager?.cancel(pendingIntent)
         }
     }
 }

@@ -34,14 +34,18 @@ class GlassWeatherWidgetProvider : AppWidgetProvider() {
             val isNight = hour < 6 || hour >= 19
 
             val tempStr = if (isNight) "24°" else "29°"
-            val conditionStr = if (isNight) "Clear Night • سماء صافية" else "Sunny • مشمس وصافٍ"
-            val badgeStr = if (isNight) "NIGHT" else "SUNNY"
-            val iconRes = if (isNight) R.drawable.ic_weather_cloud else R.drawable.ic_weather_sun
+            val conditionStr = if (isNight) "Clear Night • سماء صافية" else "Sunny & Clear • مشمس وصافٍ"
 
-            views.setTextViewText(R.id.weather_temp, tempStr)
-            views.setTextViewText(R.id.weather_condition, conditionStr)
-            views.setTextViewText(R.id.weather_status_badge, badgeStr)
-            views.setImageViewResource(R.id.weather_icon, iconRes)
+            // Render high-res atmospheric glass weather bitmap
+            val bitmap = GlassWidgetRenderer.renderWeatherWidget(
+                context = context,
+                tempStr = tempStr,
+                conditionStr = conditionStr,
+                isNight = isNight,
+                width = 720,
+                height = 360
+            )
+            views.setImageViewBitmap(R.id.widget_weather_canvas, bitmap)
 
             // Launch MainActivity when tapped
             val intent = Intent(context, MainActivity::class.java)

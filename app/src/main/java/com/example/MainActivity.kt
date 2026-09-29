@@ -49,6 +49,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        try {
+            com.example.widget.GlassAppWidgetProvider.updateAllWidgets(this)
+        } catch (_: Exception) {}
         setContent {
             GlassAppRoot()
         }

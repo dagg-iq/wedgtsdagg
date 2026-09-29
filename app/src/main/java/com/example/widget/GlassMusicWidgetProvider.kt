@@ -61,7 +61,7 @@ class GlassMusicWidgetProvider : AppWidgetProvider() {
         private var currentTrackIndex = 0
         private var isPlaying = true
 
-        private fun updateAllWidgets(context: Context) {
+        fun updateAllWidgets(context: Context) {
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val thisWidget = ComponentName(context, GlassMusicWidgetProvider::class.java)
             val allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget)
@@ -78,9 +78,16 @@ class GlassMusicWidgetProvider : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.glass_music_widget_layout)
             val track = playlist[currentTrackIndex]
 
-            views.setTextViewText(R.id.music_track_title, track.title)
-            views.setTextViewText(R.id.music_artist_name, track.artist)
-            views.setTextViewText(R.id.music_time, track.duration)
+            // Render Luxury Canvas Media Player Bitmap
+            val bitmap = GlassWidgetRenderer.renderMusicWidget(
+                context = context,
+                trackTitle = track.title,
+                artistName = track.artist,
+                isPlaying = isPlaying,
+                width = 720,
+                height = 360
+            )
+            views.setImageViewBitmap(R.id.widget_music_canvas, bitmap)
 
             // Play / Pause Icon toggle
             val playIcon = if (isPlaying) R.drawable.ic_music_pause else R.drawable.ic_music_play
@@ -116,13 +123,13 @@ class GlassMusicWidgetProvider : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.btn_music_prev, prevPendingIntent)
 
-            // Launch App when tapping background
-            val mainIntent = Intent(context, MainActivity::class.java)
-            val mainPendingIntent = PendingIntent.getActivity(
-                context, 100, mainIntent,
+            // Tap on background to open app
+            val appIntent = Intent(context, MainActivity::class.java)
+            val appPendingIntent = PendingIntent.getActivity(
+                context, 104, appIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
-            views.setOnClickPendingIntent(R.id.widget_music_root, mainPendingIntent)
+            views.setOnClickPendingIntent(R.id.widget_music_canvas, appPendingIntent)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
