@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/widget_root"
+    android:id="@+id/widget_weather_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_glass_widget"
+    android:background="@drawable/bg_glass_weather"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Top bar: Title & Date pill -->
+    <!-- Top header with city & condition -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,96 +15,104 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/widget_title"
+            android:id="@+id/weather_city"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="CHRONO • GLASS CLOCK"
-            android:textColor="#B303D5FF"
+            android:text="BAGHDAD • LIVE WEATHER"
+            android:textColor="#B34CC3FF"
             android:textSize="10sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/widget_date"
+            android:id="@+id/weather_status_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_glass_pill"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="3dp"
-            android:text="TUE, 29 SEP"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:text="SUNNY"
             android:textColor="#FFFFFFFF"
-            android:textSize="10sp"
+            android:textSize="9sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Main Time Display -->
+    <!-- Main Temperature & Icon -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="6dp">
 
         <TextView
-            android:id="@+id/widget_time"
-            android:layout_width="0dp"
+            android:id="@+id/weather_temp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="11:40"
+            android:text="28°"
             android:textColor="#FFFFFFFF"
-            android:textSize="46sp"
+            android:textSize="44sp"
             android:textStyle="bold" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="end"
+            android:layout_marginStart="14dp"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/widget_am_pm"
+                android:id="@+id/weather_condition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PM"
-                android:textColor="#CC03D5FF"
+                android:text="Clear Sky • صافٍ"
+                android:textColor="#FFFFFFFF"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/widget_seconds"
+                android:id="@+id/weather_high_low"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SEC 00"
-                android:textColor="#80FFFFFF"
-                android:textSize="10sp" />
+                android:layout_marginTop="2dp"
+                android:text="H: 33°  L: 21°"
+                android:textColor="#B3ECEFF1"
+                android:textSize="12sp" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/weather_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_weather_sun"
+            android:contentDescription="Weather Icon" />
     </LinearLayout>
 
-    <!-- Bottom info row: Weather & Battery -->
+    <!-- Bottom Metrics: Humidity & Wind -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:layout_marginTop="4dp">
+        android:layout_marginTop="6dp">
 
         <TextView
-            android:id="@+id/widget_weather"
+            android:id="@+id/weather_humidity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="☀️ 28°C • Clear Sky"
-            android:textColor="#E1E1E1"
-            android:textSize="12sp" />
+            android:text="💧 Humidity 38%"
+            android:textColor="#CCE1F5FE"
+            android:textSize="11sp" />
 
         <TextView
-            android:id="@+id/widget_battery"
+            android:id="@+id/weather_wind"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="⚡ 85%"
-            android:textColor="#03D5FF"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:text="💨 Wind 14 km/h"
+            android:textColor="#CCE1F5FE"
+            android:textSize="11sp" />
     </LinearLayout>
 
 </LinearLayout>

@@ -15,3 +15,6 @@
 .cxx
 local.properties
 .env
+
+app-debug.apk
+

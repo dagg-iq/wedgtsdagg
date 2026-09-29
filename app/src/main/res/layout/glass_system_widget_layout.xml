@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_system_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_glass_system"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Header bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="DEVICE VITALS • GLASS SYSTEM"
+            android:textColor="#B34EEDB3"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/system_charging_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_glass_pill"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:text="OPTIMAL"
+            android:textColor="#FFFFFFFF"
+            android:textSize="9sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Main Stats Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <!-- Battery Block -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BATTERY"
+                android:textColor="#99FFFFFF"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/system_battery_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="85%"
+                android:textColor="#FF4EEDB3"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/system_battery_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚡ Fast Charging"
+                android:textColor="#CCFFFFFF"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="12dp"
+            android:background="#33FFFFFF" />
+
+        <!-- Memory / Storage Block -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RAM AVAILABLE"
+                android:textColor="#99FFFFFF"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/system_ram_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6.2 GB"
+                android:textColor="#FF64B5F6"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/system_storage_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="💾 Storage 64% used"
+                android:textColor="#CCFFFFFF"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Tap Hint -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="Tap to open Device Dashboard"
+        android:textColor="#80FFFFFF"
+        android:textSize="10sp" />
+
+</LinearLayout>

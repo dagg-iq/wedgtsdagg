@@ -26,9 +26,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddHome
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.Headphones
+import androidx.compose.material.icons.rounded.Memory
 import androidx.compose.material.icons.rounded.OpenInNew
+import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material.icons.rounded.SmartDisplay
 import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material.icons.rounded.WbSunny
 import androidx.compose.material.icons.rounded.Widgets
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -37,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
@@ -56,6 +61,9 @@ import com.example.ui.widgets.GlassNotesWidget
 import com.example.ui.widgets.GlassSystemWidget
 import com.example.ui.widgets.GlassWeatherWidget
 import com.example.widget.GlassAppWidgetProvider
+import com.example.widget.GlassMusicWidgetProvider
+import com.example.widget.GlassSystemWidgetProvider
+import com.example.widget.GlassWeatherWidgetProvider
 
 @Composable
 fun GlassShowcaseScreen(
@@ -146,66 +154,56 @@ fun GlassShowcaseScreen(
             }
         }
 
-        // Home Screen Widget Pin Card
+        // Pin Glass Clock Widget Button
         item {
-            GlassBox(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("pin_widget_card"),
-                shape = RoundedCornerShape(22.dp),
-                elevation = 8.dp,
-                glassAlpha = 0.22f,
-                borderAlpha = 0.85f,
-                onClick = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        val appWidgetManager = context.getSystemService(AppWidgetManager::class.java)
-                        val provider = ComponentName(context, GlassAppWidgetProvider::class.java)
-                        if (appWidgetManager != null && appWidgetManager.isRequestPinAppWidgetSupported) {
-                            appWidgetManager.requestPinAppWidget(provider, null, null)
-                        } else {
-                            Toast.makeText(context, "Long-press your Home Screen to add Glass Widget", Toast.LENGTH_LONG).show()
-                        }
-                    } else {
-                        Toast.makeText(context, "Long-press your Home Screen to add Glass Widget", Toast.LENGTH_LONG).show()
-                    }
-                }
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(14.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(46.dp)
-                            .clip(CircleShape)
-                            .background(tokens.action.copy(alpha = 0.20f)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.AddHome,
-                            contentDescription = "Pin Widget",
-                            tint = tokens.action,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
+            GlassPinWidgetCard(
+                title = "إضافة ويدجت الساعة والتقويم",
+                subtitle = "ضع ويدجت الساعة الزجاجية التفاعلية على شاشتك الرئيسية",
+                icon = Icons.Rounded.Schedule,
+                iconColor = tokens.action,
+                providerClass = GlassAppWidgetProvider::class.java
+            )
+        }
 
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Add to Home Screen",
-                            color = tokens.content,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "Pin real Glass Clock & Quick Switcher to your launcher",
-                            color = tokens.contentSubtle,
-                            fontSize = 11.sp
-                        )
-                    }
-                }
+        // Glass Media Player Widget
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                GlassMediaPlayerWidget()
+                GlassPinWidgetCard(
+                    title = "إضافة ويدجت مشغل الموسيقى",
+                    subtitle = "تحكم بالمقاطع الصوتية والموسيقى مباشرة من الشاشة الرئيسية",
+                    icon = Icons.Rounded.Headphones,
+                    iconColor = Color(0xFFD18CFF),
+                    providerClass = GlassMusicWidgetProvider::class.java
+                )
+            }
+        }
+
+        // Glass Weather & Atmosphere Widget
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                GlassWeatherWidget()
+                GlassPinWidgetCard(
+                    title = "إضافة ويدجت الطقس ودرجة الحرارة",
+                    subtitle = "درجة الحرارة وحالة الطقس المباشرة على شاشتك الرئيسية",
+                    icon = Icons.Rounded.WbSunny,
+                    iconColor = Color(0xFF4CC3FF),
+                    providerClass = GlassWeatherWidgetProvider::class.java
+                )
+            }
+        }
+
+        // Glass Battery & System Health Widget
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                GlassSystemWidget()
+                GlassPinWidgetCard(
+                    title = "إضافة ويدجت النظام والبطارية",
+                    subtitle = "مراقبة نسبة شحن البطارية واستهلاك الذاكرة الحية",
+                    icon = Icons.Rounded.Memory,
+                    iconColor = Color(0xFF4EEDB3),
+                    providerClass = GlassSystemWidgetProvider::class.java
+                )
             }
         }
 
@@ -214,27 +212,12 @@ fun GlassShowcaseScreen(
             GlassControlCenterWidget()
         }
 
-        // Glass Weather & Atmosphere Widget
-        item {
-            GlassWeatherWidget()
-        }
-
-        // Glass Media Player Widget
-        item {
-            GlassMediaPlayerWidget()
-        }
-
-        // Glass Battery & System Health Widget
-        item {
-            GlassSystemWidget()
-        }
-
         // Glass Focus Notes & Checklist Widget
         item {
             GlassNotesWidget()
         }
 
-        // Article & Spec Box (Translating CSS .box, .article, blockquote)
+        // Article & Spec Box
         item {
             Box(
                 modifier = Modifier
@@ -289,6 +272,104 @@ fun GlassShowcaseScreen(
 
         item {
             Spacer(modifier = Modifier.height(90.dp))
+        }
+    }
+}
+
+@Composable
+fun GlassPinWidgetCard(
+    title: String,
+    subtitle: String,
+    icon: ImageVector,
+    iconColor: Color,
+    providerClass: Class<*>,
+    modifier: Modifier = Modifier
+) {
+    val tokens = LocalGlassTheme.current
+    val context = LocalContext.current
+
+    GlassBox(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        elevation = 6.dp,
+        glassAlpha = 0.22f,
+        borderAlpha = 0.80f,
+        onClick = {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val appWidgetManager = context.getSystemService(AppWidgetManager::class.java)
+                val provider = ComponentName(context, providerClass)
+                if (appWidgetManager != null && appWidgetManager.isRequestPinAppWidgetSupported) {
+                    appWidgetManager.requestPinAppWidget(provider, null, null)
+                } else {
+                    Toast.makeText(context, "اضغط مطولاً على الشاشة الرئيسية لإضافة الويدجت", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Toast.makeText(context, "اضغط مطولاً على الشاشة الرئيسية لإضافة الويدجت", Toast.LENGTH_LONG).show()
+            }
+        }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(iconColor.copy(alpha = 0.20f))
+                    .border(1.dp, iconColor.copy(alpha = 0.50f), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = title,
+                    tint = iconColor,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    color = tokens.content,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = subtitle,
+                    color = tokens.contentSubtle,
+                    fontSize = 11.sp
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(iconColor.copy(alpha = 0.15f))
+                    .border(1.dp, iconColor.copy(alpha = 0.40f), RoundedCornerShape(12.dp))
+                    .padding(horizontal = 10.dp, vertical = 6.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.AddHome,
+                        contentDescription = "Add",
+                        tint = iconColor,
+                        modifier = Modifier.size(14.dp)
+                    )
+                    Text(
+                        text = "إضافة",
+                        color = iconColor,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         }
     }
 }
