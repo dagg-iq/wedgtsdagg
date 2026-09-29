@@ -120,6 +120,11 @@ fun GlassIconThemerScreen(
         )
     }
 
+    val filteredApps = remember(installedApps, searchQuery) {
+        if (searchQuery.isBlank()) installedApps
+        else installedApps.filter { it.appName.contains(searchQuery, ignoreCase = true) || it.packageName.contains(searchQuery, ignoreCase = true) }
+    }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -473,11 +478,6 @@ fun GlassIconThemerScreen(
         }
 
         // Apps List
-        val filteredApps = remember(installedApps, searchQuery) {
-            if (searchQuery.isBlank()) installedApps
-            else installedApps.filter { it.appName.contains(searchQuery, ignoreCase = true) || it.packageName.contains(searchQuery, ignoreCase = true) }
-        }
-
         if (isLoadingApps) {
             item {
                 Box(
