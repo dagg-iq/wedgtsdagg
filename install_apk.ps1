@@ -23,8 +23,9 @@ if (-not $ApkFile) {
     }
 }
 
-if (-not (Test-Path $ApkFile)) {
-    Write-Host "Please specify APK file or put it in Downloads folder." -ForegroundColor Yellow
+if ([string]::IsNullOrWhiteSpace($ApkFile) -or -not (Test-Path $ApkFile)) {
+    Write-Host "Error: No APK file found in Downloads folder yet." -ForegroundColor Red
+    Write-Host "Please download 'GlassWidgets-debug-apk' first, then run this script." -ForegroundColor Yellow
     exit 1
 }
 

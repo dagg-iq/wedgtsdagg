@@ -10,7 +10,7 @@ plugins {
 
 android {
   namespace = "com.example"
-  compileSdk = 35
+  compileSdk { version = release(35) }
 
   defaultConfig {
     applicationId = "com.aistudio.glasswidgets.kxvqzn"
