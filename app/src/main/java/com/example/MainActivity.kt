@@ -38,6 +38,7 @@ import com.example.ui.glass.GlassThemeSwitcher
 import com.example.ui.screens.GlassClockScreen
 import com.example.ui.screens.GlassControlScreen
 import com.example.ui.screens.GlassCustomizerScreen
+import com.example.ui.screens.GlassIconThemerScreen
 import com.example.ui.screens.GlassShowcaseScreen
 import com.example.ui.theme.GlassColorTokens
 import com.example.ui.theme.GlassTheme
@@ -169,8 +170,12 @@ fun GlassAppRoot() {
                                     currentThemeMode = themeMode,
                                     clockStyle = clockStyle,
                                     isSmoothSweep = isSmoothSweep,
-                                    onNavigateToClock = { selectedTab = GlassNavTab.CLOCK }
+                                    onNavigateToClock = { selectedTab = GlassNavTab.CLOCK },
+                                    onNavigateToIcons = { selectedTab = GlassNavTab.ICONS }
                                 )
+                            }
+                            GlassNavTab.ICONS -> {
+                                GlassIconThemerScreen()
                             }
                             GlassNavTab.CLOCK -> {
                                 GlassClockScreen(

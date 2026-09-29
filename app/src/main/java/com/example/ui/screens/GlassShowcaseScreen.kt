@@ -71,6 +71,7 @@ fun GlassShowcaseScreen(
     clockStyle: ClockFaceStyle,
     isSmoothSweep: Boolean,
     onNavigateToClock: () -> Unit,
+    onNavigateToIcons: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val tokens = LocalGlassTheme.current
@@ -85,6 +86,72 @@ fun GlassShowcaseScreen(
     ) {
         item {
             Spacer(modifier = Modifier.height(6.dp))
+        }
+
+        // Featured iOS Glass Icons Banner
+        item {
+            GlassBox(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onNavigateToIcons?.invoke() },
+                shape = RoundedCornerShape(24.dp),
+                elevation = 10.dp,
+                glassAlpha = 0.22f,
+                borderAlpha = 0.85f
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(52.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(tokens.action.copy(alpha = 0.25f))
+                            .border(1.dp, tokens.action.copy(alpha = 0.5f), RoundedCornerShape(16.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.AutoAwesome,
+                            contentDescription = null,
+                            tint = tokens.action,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "ثيم أيقونات iOS الزجاجي الفاخر",
+                            color = tokens.content,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "تحويل أيقونات هاتفك إلى طبقات زجاجية مثل iOS 18 + شريط Dock زجاجي",
+                            color = tokens.contentSubtle,
+                            fontSize = 11.sp,
+                            lineHeight = 16.sp
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(tokens.action)
+                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = "فتح",
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+            }
         }
 
         // Hero Glass Analog Clock Card

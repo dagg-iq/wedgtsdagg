@@ -40,6 +40,7 @@ import com.example.ui.theme.LocalGlassTheme
 
 enum class GlassNavTab(val title: String, val icon: ImageVector) {
     SHOWCASE("Widgets", Icons.Rounded.Widgets),
+    ICONS("Icons", Icons.Rounded.AutoAwesome),
     CLOCK("Horology", Icons.Rounded.AccessTime),
     CONTROLS("Controls", Icons.Rounded.Tune),
     CUSTOMIZER("Studio", Icons.Rounded.Palette)
