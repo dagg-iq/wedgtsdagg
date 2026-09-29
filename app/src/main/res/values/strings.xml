@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Glass Widgets</string>
+    <string name="tab_showcase">Glass Widgets</string>
+    <string name="tab_clock">Luxury Clock</string>
+    <string name="tab_controls">Control Center</string>
+    <string name="tab_customizer">Customizer</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_dim">Dim</string>
+</resources>

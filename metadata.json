@@ -1,0 +1,6 @@
+{
+  "name": "Glass Widgets",
+  "description": "Ultra-realistic frosted glass widgets studio with luxury analog clock, dynamic theme switcher, control center, and home screen widgets.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
