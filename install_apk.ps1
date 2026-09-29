@@ -6,10 +6,20 @@ $ADB = "C:\Users\ALHADRAWY\.gemini\antigravity-ide\scratch\platform-tools\adb.ex
 $DEVICE = "R5CW40F1QYF"
 
 if (-not $ApkFile) {
-    # Find latest APK in Downloads or current folder
-    $latestDownload = Get-ChildItem -Path "$env:USERPROFILE\Downloads\*.apk", ".\*.apk" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-    if ($latestDownload) {
-        $ApkFile = $latestDownload.FullName
+    # Check if a zip artifact was downloaded
+    $zip = Get-ChildItem -Path "$env:USERPROFILE\Downloads\*GlassWidgets*.zip" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    if ($zip) {
+        Write-Host "Extracting APK from $($zip.FullName)..." -ForegroundColor Cyan
+        Expand-Archive -Path $zip.FullName -DestinationPath "$env:USERPROFILE\Downloads\GlassWidgetsExtracted" -Force
+        $latestExtracted = Get-ChildItem -Path "$env:USERPROFILE\Downloads\GlassWidgetsExtracted\*.apk" | Select-Object -First 1
+        if ($latestExtracted) { $ApkFile = $latestExtracted.FullName }
+    }
+    
+    if (-not $ApkFile) {
+        $latestDownload = Get-ChildItem -Path "$env:USERPROFILE\Downloads\*.apk", ".\*.apk" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        if ($latestDownload) {
+            $ApkFile = $latestDownload.FullName
+        }
     }
 }
 
