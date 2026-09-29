@@ -55,12 +55,13 @@ jobs:
           retention-days: 7
 
       - name: Publish APK to Release v1.0
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: "v1.0"
-          name: "Glass Widgets APK v1.0"
-          files: "**/*.apk"
-          notes: "APK build completed successfully! Download app-debug.apk below."
-          overwrite: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          APK_PATH=$(find app/build/outputs/apk/debug -name "*.apk" | head -n 1)
+          echo "Found APK at: $APK_PATH"
+          gh release delete-asset v1.0 app-debug.apk -y || true
+          gh release upload v1.0 "$APK_PATH" --clobber || \
+          gh release create v1.0 "$APK_PATH" --title "Glass Widgets APK v1.0" --notes "Latest build"
+          gh release edit v1.0 --notes "Glass Widgets with iOS Frosted Glass Icon Studio & Dock Widget. Built at $(date -u)" || true
+
