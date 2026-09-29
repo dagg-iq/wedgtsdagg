@@ -23,15 +23,26 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-
       - name: Ensure gradlew is executable
         run: chmod +x gradlew
 
-      - name: Accept Android SDK Licenses
-        run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+      - name: Accept Android SDK Licenses and Install SDK 36
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" || true
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace --no-daemon
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ./gradlew assembleDebug --stacktrace --no-daemon 2>&1 | tee build.log || BUILD_FAILED=true
+          if [ "$BUILD_FAILED" = "true" ]; then
+            echo "::error::Gradle assembleDebug failed!"
+            FAIL_LOG=$(tail -n 120 build.log)
+            echo "$FAIL_LOG"
+            gh release edit v1.0 --notes "$FAIL_LOG" || true
+            exit 1
+          fi
 
       - name: List Generated APKs
         run: find . -name "*.apk" -ls
@@ -43,12 +54,13 @@ jobs:
           path: "**/*.apk"
           retention-days: 7
 
-      - name: Create Direct Download Release
+      - name: Publish APK to Release v1.0
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "v1.0"
           name: "Glass Widgets APK v1.0"
           files: "**/*.apk"
+          notes: "APK build completed successfully! Download app-debug.apk below."
           overwrite: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
